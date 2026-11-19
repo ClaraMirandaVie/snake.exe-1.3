@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SNAKE.exe</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;600;700&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <main id="app">
+
+    <!-- NAME (aparece na primeira vez) -->
+    <section class="screen" id="screen-name">
+      <h2 class="title">Qual é o seu nome?</h2>
+      <p class="placeholder">Ele aparece no ranking. Até 12 caracteres.</p>
+      <form class="menu" id="name-form">
+        <input class="text-input" id="name-input" type="text" maxlength="12"
+               autocomplete="off" placeholder="Seu nome" aria-label="Seu nome" required>
+        <p class="error" id="name-error" hidden>Use de 1 a 12 caracteres: letras, números, espaço, _ ou -.</p>
+        <button class="btn btn-primary" type="submit">CONFIRMAR</button>
+        <button class="btn btn-back" type="button" id="name-back" data-goto="main-menu" hidden>Voltar</button>
+      </form>
+    </section>
+
+    <!-- RANKING -->
+    <section class="screen" id="screen-ranking">
+      <h2 class="title">Ranking</h2>
+      <div class="tabs">
+        <button class="btn tab" data-ranking="easy">EASY</button>
+        <button class="btn tab" data-ranking="normal">NORMAL</button>
+        <button class="btn tab" data-ranking="hard">HARD</button>
+        <button class="btn tab" data-ranking="insane">INSANE</button>
+        <button class="btn tab" data-ranking="extreme">EXTREME</button>
+      </div>
+      <p class="placeholder" id="ranking-status">Carregando...</p>
+      <ol class="panel-list" id="ranking-list"></ol>
+      <p class="placeholder">Jogando como <strong id="ranking-player"></strong></p>
+      <button class="btn" data-goto="name">TROCAR NOME</button>
+      <button class="btn btn-back" data-goto="main-menu">Voltar</button>
+    </section>
+
+    <!-- MAIN MENU -->
+    <section class="screen active" id="screen-main-menu">
+      <h1 class="logo">SNAKE<span>.exe</span></h1>
+      <p class="record">Recorde: <strong id="record-value">0</strong></p>
+
+      <nav class="menu">
+        <button class="btn btn-primary" data-goto="mode-select">PLAY</button>
+        <button class="btn" data-goto="ranking">RANKING</button>
+        <button class="btn" data-goto="settings">SETTINGS</button>
+        <button class="btn" data-goto="statistics">STATISTICS</button>
+        <button class="btn" data-goto="skins">SKINS</button>
+      </nav>
+    </section>
+
+    <!-- MODE SELECTION -->
+    <section class="screen" id="screen-mode-select">
+      <h2 class="title">Escolha o modo</h2>
+      <nav class="menu">
+        <button class="btn btn-primary" data-mode="classic" data-goto="speed-select">CLASSIC</button>
+        <button class="btn" disabled>ZEN <small>em breve</small></button>
+        <button class="btn" disabled>CHALLENGE <small>em breve</small></button>
+        <button class="btn btn-back" data-goto="main-menu">Voltar</button>
+      </nav>
+    </section>
+
+    <!-- SPEED SELECTION -->
+    <section class="screen" id="screen-speed-select">
+      <h2 class="title">Escolha a velocidade</h2>
+      <nav class="menu">
+        <button class="btn" data-speed="easy" data-goto="game">EASY</button>
+        <button class="btn btn-primary" data-speed="normal" data-goto="game">NORMAL</button>
+        <button class="btn" data-speed="hard" data-goto="game">HARD</button>
+        <button class="btn btn-hot" data-speed="insane" data-goto="game">INSANE</button>
+        <button class="btn btn-hot" data-speed="extreme" data-goto="game">EXTREME</button>
+        <button class="btn btn-back" data-goto="mode-select">Voltar</button>
+      </nav>
+    </section>
+
+    <!-- GAME SCREEN -->
+    <section class="screen" id="screen-game">
+      <header class="hud">
+        <span>Pontos: <strong id="hud-score">0</strong></span>
+        <span>Tempo: <strong id="hud-time">00:00</strong></span>
+        <span id="hud-mode">Classic</span>
+        <span>Recorde: <strong id="hud-record">0</strong></span>
+        <button class="btn btn-small" data-action="pause" aria-label="Pausar">PAUSE</button>
+      </header>
+
+      <div class="board">
+        <canvas id="game-canvas" width="480" height="480"></canvas>
+
+        <div class="overlay" id="game-over">
+          <h2 class="title">GAME OVER</h2>
+          <p class="new-record" id="new-record" hidden>Novo recorde!</p>
+          <p class="record">Pontuação: <strong id="final-score">0</strong></p>
+          <p class="record">Recorde: <strong id="final-record">0</strong></p>
+          <p class="record">Tempo: <strong id="final-time">00:00</strong></p>
+          <p class="record" id="ranking-status-game" hidden></p>
+          <nav class="menu">
+            <button class="btn btn-primary" data-action="retry">RETRY</button>
+            <button class="btn" data-goto="main-menu">MAIN MENU</button>
+          </nav>
+        </div>
+
+        <div class="overlay" id="pause-menu">
+          <h2 class="title">PAUSED</h2>
+          <nav class="menu">
+            <button class="btn btn-primary" data-action="resume">RESUME</button>
+            <button class="btn" data-action="retry">RESTART</button>
+            <button class="btn" data-goto="main-menu">MAIN MENU</button>
+          </nav>
+        </div>
+      </div>
+
+      <button class="btn btn-back" data-goto="main-menu">Voltar ao menu</button>
+    </section>
+
+    <!-- SETTINGS -->
+    <section class="screen" id="screen-settings">
+      <h2 class="title">Settings</h2>
+      <div class="panel-list">
+        <label class="row">
+          <span>Volume geral</span>
+          <span class="volume">
+            <input type="range" id="setting-volume" min="0" max="100" step="5">
+            <output id="setting-volume-label">70%</output>
+          </span>
+        </label>
+        <label class="row">
+          <span>Efeitos sonoros</span>
+          <input type="checkbox" class="switch" id="setting-sfx">
+        </label>
+        <label class="row">
+          <span>Música</span>
+          <input type="checkbox" class="switch" id="setting-music">
+        </label>
+      </div>
+      <button class="btn" data-action="reset-settings">RESTAURAR PADRÕES</button>
+      <button class="btn btn-back" data-goto="main-menu">Voltar</button>
+    </section>
+
+    <!-- STATISTICS -->
+    <section class="screen" id="screen-statistics">
+      <h2 class="title">Statistics</h2>
+      <ul class="panel-list">
+        <li class="row"><span>Partidas realizadas</span><strong id="stat-played">0</strong></li>
+        <li class="row"><span>Partidas concluídas</span><strong id="stat-completed">0</strong></li>
+        <li class="row"><span>Maior pontuação</span><strong id="stat-highest">0</strong></li>
+        <li class="row"><span>Total de alimentos</span><strong id="stat-food">0</strong></li>
+        <li class="row"><span>Maior comprimento</span><strong id="stat-length">0</strong></li>
+      </ul>
+
+      <h3 class="subtitle">Melhores resultados</h3>
+      <ul class="panel-list">
+        <li class="row"><span>Classic · Easy</span><strong id="stat-best-easy">0</strong></li>
+        <li class="row"><span>Classic · Normal</span><strong id="stat-best-normal">0</strong></li>
+        <li class="row"><span>Classic · Hard</span><strong id="stat-best-hard">0</strong></li>
+        <li class="row"><span>Classic · Insane</span><strong id="stat-best-insane">0</strong></li>
+        <li class="row"><span>Classic · Extreme</span><strong id="stat-best-extreme">0</strong></li>
+      </ul>
+      <button class="btn btn-back" data-goto="main-menu">Voltar</button>
+    </section>
+
+    <!-- SKINS -->
+    <section class="screen" id="screen-skins">
+      <h2 class="title">Skins</h2>
+      <div class="skin-grid">
+        <button class="btn skin" data-skin="default"><span class="swatch"></span>DEFAULT</button>
+        <button class="btn skin" data-skin="pink"><span class="swatch"></span>PINK</button>
+        <button class="btn skin" data-skin="lime"><span class="swatch"></span>LIME</button>
+        <button class="btn skin" data-skin="white"><span class="swatch"></span>WHITE</button>
+      </div>
+      <button class="btn btn-back" data-goto="main-menu">Voltar</button>
+    </section>
+
+  </main>
+
+  <script type="module" src="js/main.js"></script>
+</body>
+</html>
