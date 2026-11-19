@@ -1,6 +1,6 @@
 # snake.exe-1.3
 A browser-based Snake game developed as a personal portfolio project to practice and improve programming skills, explore web development, and experiment with interactive features.
-**Play now:** [Insert your game link]
+**Play now:** [[Insert your game link]](https://claramirandavie.github.io/snake.exe-1.3/)
 
 ## Features
 - **5 Difficulty Levels:** Easy, Normal, Hard, Insane, and Extreme, each with different gameplay speeds.
